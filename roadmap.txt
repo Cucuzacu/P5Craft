@@ -1,0 +1,14 @@
+mechanics:
+Inventory - no
+Item drops - no
+Ores - no
+Biomes - no
+Day/night - no
+Multiplayer - no
+
+visuals:
+lightning - no
+fog - no
+sky gradient - no
+ambient occlusion - no
+coloured lighting emitted by ores - no

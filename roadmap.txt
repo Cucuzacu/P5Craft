@@ -1,6 +1,6 @@
 mechanics:
-Inventory - no
-Item drops - no
+Inventory - yes
+Item drops - yes
 Ores - no
 Biomes - no
 Day/night - no

@@ -1,2 +1,2 @@
 # P5Craft
-One of the most advanced Minecraft clones coded in p5.js!
+Crosshair rendering is broken on p5js.org. Use the interpreter in this repo for it to work.

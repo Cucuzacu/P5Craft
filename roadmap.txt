@@ -1,7 +1,7 @@
 mechanics:
 Inventory - yes
 Item drops - yes
-Health - no
+Health - yes
 Ores - no
 Biomes - no
 Day/night - no

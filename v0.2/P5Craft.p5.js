@@ -505,9 +505,9 @@ function handlePhysics() {
         // =========================
 
         let fallDistance = abs(pY - fallStartY);
-        let safeFall = 100;
-        if (fallDistance > safeFall) {
-          let damage = floor((fallDistance - safeFall) / 5);
+        let fallenBlocks = fallDistance / blockSize;
+        if (fallenBlocks > 3) {
+          let damage = floor((fallenBlocks - 3) * 5);
           takeDamage(damage);
         }
       } else if (velocityY < 0) {
@@ -808,7 +808,7 @@ function keyPressed(){
 
   if(key === " " && isGrounded){
 
-    velocityY = -8;
+    velocityY = -5.7;
   }
 
   if(key === "1") selectedBlock = GRASS;

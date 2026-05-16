@@ -51,6 +51,12 @@ let isGrounded = false;
 const playerHeight = 55;
 const playerRadius = 10;
 
+let health = 100;
+let maxHealth = 100;
+
+let fallStartY = 0;
+let wasGrounded = false;
+
 // =========================
 // GAME
 // =========================
@@ -478,27 +484,42 @@ function handleInput() {
 // =========================
 
 function handlePhysics() {
+  if (isGrounded && velocityY === 0) {
+    fallStartY = pY;
+  }
   velocityY += 0.35;
   velocityY = constrain(velocityY, -50, 12);
-
   let steps = ceil(abs(velocityY));
   let stepAmount = velocityY / steps;
-
+  wasGrounded = isGrounded;
   for (let i = 0; i < steps; i++) {
     let ny = pY + stepAmount;
-
     if (checkCollision(pX, ny, pZ)) {
       if (velocityY > 0) {
         isGrounded = true;
         let blockYIndex = floor((-ny + blockSize/2) / blockSize);
         pY = (-blockYIndex * blockSize) - (blockSize/2) - 0.01;
+
+        // =========================
+        // FALL DAMAGE
+        // =========================
+
+        let fallDistance = abs(pY - fallStartY);
+        let safeFall = 100;
+        if (fallDistance > safeFall) {
+          let damage = floor((fallDistance - safeFall) / 5);
+          takeDamage(damage);
+        }
       } else if (velocityY < 0) {
         velocityY = 0;
       }
       velocityY = 0;
-      break; 
+      break;
     } else {
       pY = ny;
+      if (isGrounded) {
+        fallStartY = pY;
+      }
       isGrounded = false;
     }
   }
@@ -536,6 +557,23 @@ function checkCollision(x, y, z) {
     }
   }
   return false;
+}
+
+function takeDamage(amount) {
+  health -= amount;
+  if (health < 0) {
+    health = 0;
+  }
+  console.log("Damage:", amount);
+  if (health <= 0) {
+    health = maxHealth;
+    pX = 0;
+    pZ = 0;
+    pY = -300;
+    velocityY = 0;
+    lootMessage = "YOU DIED";
+    lootTimer = 120;
+  }
 }
 
 // =========================
@@ -680,6 +718,8 @@ function drawUI() {
   resetMatrix(); 
 
   ortho();
+
+  noLights();
   
   let gl = canvas.getContext('webgl');
   gl.disable(gl.DEPTH_TEST);
@@ -689,17 +729,6 @@ function drawUI() {
   line(-10, 0, 10, 0);
   line(0, -10, 0, 10);
 
-  if (lootTimer > 0) {
-    noStroke();
-    fill(0, 255, 255);
-    textSize(24);
-    textAlign(LEFT, TOP);
-    
-    text(lootMessage, -width/2 + 20, -height/2 + 20);
-    
-    lootTimer--;
-  }
-
   let y = -height / 2 + 60;
 
   for (let key in inventory) {
@@ -707,6 +736,40 @@ function drawUI() {
     fill(255);
     text(`${key}: ${inventory[key]}`, -width / 2 + 20, y);
     y += 20;
+  }
+
+  const barWidth = 200;
+  const barHeight = 20;
+
+  const barX = - width/2 + 20;
+  const barY = height/2 - barHeight - 20;
+
+  fill(80);
+
+  rect(barX, barY, barWidth, barHeight);
+
+  fill(255, 50, 50);
+
+  let hpWidth = map(health, 0, maxHealth, 0, barWidth);
+
+  rect(barX, barY, hpWidth, barHeight);
+
+  fill(255);
+  textSize(16);
+  textAlign(LEFT, TOP);
+
+  text("HP: " + health + "/" + maxHealth, barX + 5, barY + 2);
+
+  
+  if (lootTimer > 0) {
+    noStroke();
+    fill(0, 255, 255);
+    textSize(20);
+    textAlign(LEFT, TOP);
+    
+    text(lootMessage, -width/2 + 20, -height/2 + 20);
+    
+    lootTimer--;
   }
 
   gl.enable(gl.DEPTH_TEST);

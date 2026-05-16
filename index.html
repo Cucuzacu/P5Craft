@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>P5Craft</title>
 
+  <select id="versionSelect">
+    <option value="v0.1">v0.1</option>
+    <option value="v0.2">v0.2</option>
+  </select>
+
+  <script>
+    const select = document.getElementById("versionSelect");
+
+    select.addEventListener("change", () => {
+      window.location.search = `?version=${select.value}`;
+    });
+  </script>
+  
   <script src="p5.js"></script>
 
   <script src="v0.1/P5Craft.p5.js"></script>

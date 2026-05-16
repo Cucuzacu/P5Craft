@@ -720,6 +720,8 @@ function drawUI() {
   ortho();
 
   noLights();
+
+  resetShader();
   
   let gl = canvas.getContext('webgl');
   gl.disable(gl.DEPTH_TEST);
@@ -744,11 +746,12 @@ function drawUI() {
   const barX = - width/2 + 20;
   const barY = height/2 - barHeight - 20;
 
-  fill(80);
+  noStroke();
 
+  emissiveMaterial(80);
   rect(barX, barY, barWidth, barHeight);
 
-  fill(255, 50, 50);
+  emissiveMaterial(255, 50, 50);
 
   let hpWidth = map(health, 0, maxHealth, 0, barWidth);
 
@@ -808,7 +811,7 @@ function keyPressed(){
 
   if(key === " " && isGrounded){
 
-    velocityY = -5.7;
+    velocityY = -5.2;
   }
 
   if(key === "1") selectedBlock = GRASS;
